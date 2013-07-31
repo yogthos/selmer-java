@@ -2,7 +2,8 @@
   (:require [selmer.parser :as parser]
             [selmer.tags :refer [tag-handler]]
             [selmer.filters :as filters]
-            selmer.node)
+            selmer.node
+            [clojure.walk :refer [prewalk]])
   (:import [selmer.extensions Filter]
            [selmer.node INode TextNode FunctionNode])
   (:gen-class
@@ -23,16 +24,32 @@
 
 (defn clojurize [v]
   (cond
-    (instance? java.util.Collection v)
-    (map clojurize v)
-    (instance? java.util.Map v)
-    (to-map v)
-    :else v))
+
+   (instance? java.util.Collection v)
+   (map clojurize v)
+
+   (instance? java.util.Map v)
+   (to-map v)
+
+   (or (instance? Byte v)
+       (instance? Short v)
+       (instance? Integer v)
+       (instance? Long v)
+       (instance? Float v)
+       (instance? Double v)
+       (instance? Boolean v)
+       (instance? String v))
+   v
+
+   (instance? Object v)
+   (clojurize (dissoc (bean v) :class))
+
+   :else v))
 
 (defn java-list [coll]
   (let [l (java.util.ArrayList.)]
-    (doseq [item coll] (.add l item))
-    (javaize l)))
+    (doseq [item coll] (.add l (javaize item)))
+    l))
 
 (defn java-map [m]
   (let [hm (java.util.HashMap.)]
@@ -47,7 +64,9 @@
    :else             v))
 
 (defn -addFilter [^String k ^selmer.extensions.Filter f]
-  (filters/add-filter! (keyword k) #(.render f (javaize %)))
+  (filters/add-filter! (keyword k)
+                       (fn [& args]
+                         (.render f (javaize args))))
   nil)
 
 (defn -addTag [^String tagName ^selmer.extensions.Tag t]
