@@ -36,77 +36,104 @@ import selmer.extensions.Filter;
 
 public class Main {
 
-	static class MyTag implements Tag<String,String,Map<String,String>> {
+    static class MyTag implements Tag<String,String,Map<String,String>> {
 
-        public String render(List<String> args, Map<String,Map<String,String>> context) {        	
+        public String render(List<String> args, Map<String,Map<String,String>> context) {           
             return args.get(0) + "->" + args.get(1);
         }       
     }
 
-	static class MyBlockTag implements BlockTag<String,String,Map<String,String>> {
+    static class MyBlockTag implements BlockTag<String,String,Map<String,String>> {
 
-		@Override
-		public String render(List<String> args,
-				Map<String, Map<String, String>> context,
-				Map<String, Map<String, String>> content) {
-			return content.get("foo").get("content");
-		}		
-	}
-	
+        @Override
+        public String render(List<String> args,
+                Map<String, Map<String, String>> context,
+                Map<String, Map<String, String>> content) {
+            return content.get("foo").get("content");
+        }       
+    }
+
     static class PersonFilter implements Filter<Map<String,String>> {
-    	
-        public String render(List<Map<String,String>> args) {        	
-        	String firstName = args.get(0).get("firstName");
-        	String lastName = args.get(0).get("lastName");
-        	return lastName.toUpperCase() + ", " + firstName;
+
+        public String render(List<Map<String,String>> args) {           
+            String firstName = args.get(0).get("firstName");
+            String lastName = args.get(0).get("lastName");
+            return lastName.toUpperCase() + ", " + firstName;
         }
     }
 
     public static class Person {
-    	private String firstName;
-    	private String lastName;
-    	
-    	public Person(String firstName, String lastName) {
-    		this.firstName = firstName;
-    		this.lastName = lastName;
+        private String firstName;
+        private String lastName;
+        private Address address;
+
+        public Person(String firstName, String lastName, Address address) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.setAddress(address);
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+        public String getLastName() {
+            return lastName;
+        }
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+		public Address getAddress() {
+			return address;
+		}
+
+		public void setAddress(Address address) {
+			this.address = address;
+		}
+        
+       
+    }
+    
+    public static class Address {
+    	private String street;
+    	public Address(String street) {
+    		this.setStreet(street);
     	}
+		public String getStreet() {
+			return street;
+		}
+		public void setStreet(String street) {
+			this.street = street;
+		}
     	
-		public String getFirstName() {
-			return firstName;
-		}
-		public void setFirstName(String firstName) {
-			this.firstName = firstName;
-		}
-		public String getLastName() {
-			return lastName;
-		}
-		public void setLastName(String lastName) {
-			this.lastName = lastName;
-		}
     }
     public static void main(String[] args) {
 
         Map<String, Object> m = new HashMap<String,Object>();
-        m.put("persons", Arrays.asList(new Person("John", "Doe"), new Person("Jane", "Doe")));
+        m.put("persons", Arrays.asList(new Person("John", "Doe", new Address("Welsely")),
+        		                       new Person("Jane", "Doe", new Address("Wellington"))));
         m.put("name", "Bob");
         m.put("v", "some value");
         m.put("smalltext", "some text");
-        
+
         Selmer.addTag("x", new MyTag());
         Selmer.addBlockTag("foo", "endfoo", new MyBlockTag());
         Selmer.addFilter("formatPerson", new PersonFilter());
 
         String template = //variables
-        		          "{{name}}\n" +
-        		          //conditions
+                          "{{name}}\n" +
+                          //conditions
                           "{% if v %}we have {{v}}{%else%}no v{% endif %}\n" +
-        		          //loops
-                          "{% for person in persons %} {{person.firstName}} {% endfor %}\n" +
-        		          //custom filters
-                          "{% for person in persons %} {{person|formatPerson}} {% endfor %}\n" +                          
-        		          //custom tags
+                          //loops
+                          "{% for person in persons %} {{person.firstName}} lives on {{person.address.street}}\n{% endfor %}\n" +
+                          //custom filters
+                          "{% for person in persons %} {{person|formatPerson}} {% endfor %}\n" +
+                          //custom tags
                           "{% x y z %}{% foo %}foo body {{smalltext|upper}}{% endfoo %}";
-        
+
         System.out.println(Selmer.render(template, m));
     }
 }
@@ -116,7 +143,9 @@ The above example will produce the following output:
 ```
 Bob
 we have some value
- John  Jane 
+ John lives on Welsely
+ Jane lives on Wellington
+
  DOE, John  DOE, Jane 
 y->zfoo body SOME TEXT
 ```
