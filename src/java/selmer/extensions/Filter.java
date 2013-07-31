@@ -1,5 +1,6 @@
 package selmer.extensions;
 
-public interface Filter {
-  public String render(java.util.List args);
+public interface Filter<T> {
+  public String render(java.util.List<T> args);
+
 }

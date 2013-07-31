@@ -1,6 +1,5 @@
 package selmer.extensions;
 
-public interface Tag {
-  public String render(java.util.List args,
-                       java.util.Map context);
+public interface Tag<T,K,V> {
+  public String render(java.util.List<T> args, java.util.Map<K,V> context);
 }
