@@ -45,7 +45,7 @@
    :else v))
 
 (defn -addFilter [^String k ^selmer.extensions.Filter f]
-  (filters/add-filter! (keyword k) #(.render f %))
+  (filters/add-filter! (keyword k) #(.render f (javaize %)))
   nil)
 
 (defn -addTag [^String tagName ^selmer.extensions.Tag t]

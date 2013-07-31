@@ -1,5 +1,5 @@
 package selmer.extensions;
 
 public interface Filter {
-  public String render(Object content);
+  public String render(java.util.List args);
 }
