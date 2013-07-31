@@ -123,16 +123,17 @@ public class Main {
         Selmer.addBlockTag("foo", "endfoo", new MyBlockTag());
         Selmer.addFilter("formatPerson", new PersonFilter());
 
-        String template = //variables
-                          "{{name}}\n" +
-                          //conditions
-                          "{% if v %}we have {{v}}{%else%}no v{% endif %}\n" +
-                          //loops
-                          "{% for person in persons %} {{person.firstName}} lives on {{person.address.street}}\n{% endfor %}\n" +
-                          //custom filters
-                          "{% for person in persons %} {{person|formatPerson}} {% endfor %}\n" +
-                          //custom tags
-                          "{% x y z %}{% foo %}foo body {{smalltext|upper}}{% endfoo %}";
+        String template =
+        //variables
+        "{{name}}\n" +
+        //conditions
+        "{% if v %}we have {{v}}{%else%}no v{% endif %}\n" +
+        //loops
+        "{% for person in persons %} {{person.firstName}} lives on {{person.address.street}}\n{% endfor %}\n" +
+        //custom filters
+        "{% for person in persons %} {{person|formatPerson}} {% endfor %}\n" +
+        //custom tags
+        "{% x y z %}{% foo %}foo body {{smalltext|upper}}{% endfoo %}";
 
         System.out.println(Selmer.render(template, m));
     }
