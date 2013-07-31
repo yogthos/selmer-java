@@ -97,6 +97,14 @@ public class Main {
 }
 
 ```
+The above example will produce the following output:
+
+```
+Result: y->z  BAR, Foo 
+
+```
 
 The API provides `render` method for rendering string content and the `render-file` method for rendering file templates
-as well as `addTag` and `addFilter` methods.
+as well as `addTag`, `addBlockTag`, and `addFilter` methods.
+
+The context map can consist of lists, maps, or beans.
