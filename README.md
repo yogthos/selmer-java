@@ -19,7 +19,7 @@ Install with Maven
 </dependency>
 ```
 
-Then can call it using `org.yogthos.Selmer:
+Then you can start using it as seen in the example below:
 
 ```java
 import java.util.Arrays;
@@ -124,4 +124,4 @@ y->zfoo body SOME TEXT
 The API provides `render` method for rendering string content and the `render-file` method for rendering file templates
 as well as `addTag`, `addBlockTag`, and `addFilter` methods.
 
-The context map can consist of lists, maps, or beans.
+The context map can consist of lists, maps, or beans, or Java primitives.
