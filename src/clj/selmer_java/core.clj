@@ -76,12 +76,6 @@
            (tag-handler #(.render t (javaize %1) (javaize %2)) open-tag))
     nil))
 
-(defn render-content [content open-tag close-tag]
-  (-> content
-      (update-in [open-tag :content] #(apply str (map (memfn render-node) %)))
-      (update-in [close-tag :content] #(apply str (map (memfn render-node) %)))
-      javaize))
-
 (defn render-block [renderer]
   (fn [args context-map content]
     (.render renderer
