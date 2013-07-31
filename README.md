@@ -22,6 +22,7 @@ Install with Maven
 Then can call it using `org.yogthos.Selmer:
 
 ```java
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ public class Main {
 
 	static class MyBlockTag implements BlockTag<String,String,Map<String,String>> {
 
+		@Override
 		public String render(List<String> args,
 				Map<String, Map<String, String>> context,
 				Map<String, Map<String, String>> content) {
@@ -51,7 +53,7 @@ public class Main {
 		}		
 	}
 	
-    static class MyFilter implements Filter<Map<String,String>> {
+    static class PersonFilter implements Filter<Map<String,String>> {
     	
         public String render(List<Map<String,String>> args) {        	
         	String firstName = args.get(0).get("firstName");
@@ -85,22 +87,38 @@ public class Main {
     public static void main(String[] args) {
 
         Map<String, Object> m = new HashMap<String,Object>();
-        m.put("foo", new Person("Foo", "Bar"));
+        m.put("persons", Arrays.asList(new Person("John", "Doe"), new Person("Jane", "Doe")));
+        m.put("name", "Bob");
+        m.put("v", "some value");
+        m.put("smalltext", "some text");
         
         Selmer.addTag("x", new MyTag());
         Selmer.addBlockTag("foo", "endfoo", new MyBlockTag());
-        Selmer.addFilter("embiginate", new MyFilter());
+        Selmer.addFilter("formatPerson", new PersonFilter());
 
-        System.out.println("Result: " + Selmer.render("{% x y z %} {% foo %} {{foo|embiginate}} {% endfoo %}", m));
+        String template = //variables
+        		          "{{name}}\n" +
+        		          //conditions
+                          "{% if v %}we have {{v}}{%else%}no v{% endif %}\n" +
+        		          //loops
+                          "{% for person in persons %} {{person.firstName}} {% endfor %}\n" +
+        		          //custom filters
+                          "{% for person in persons %} {{person|formatPerson}} {% endfor %}\n" +                          
+        		          //custom tags
+                          "{% x y z %}{% foo %}foo body {{smalltext|upper}}{% endfoo %}";
+        
+        System.out.println(Selmer.render(template, m));
     }
 }
-
 ```
 The above example will produce the following output:
 
 ```
-Result: y->z  BAR, Foo 
-
+Bob
+we have some value
+ John  Jane 
+ DOE, John  DOE, Jane 
+y->zfoo body SOME TEXT
 ```
 
 The API provides `render` method for rendering string content and the `render-file` method for rendering file templates
