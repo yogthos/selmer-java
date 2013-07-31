@@ -1,7 +1,7 @@
 selmer-java
 ===========
 
-Java wrapper for Selmer
+Java wrapper for [Selmer](https://github.com/yogthos/Selmer)
 
 ## Usage
 
