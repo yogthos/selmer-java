@@ -1,4 +1,4 @@
-(defproject selmer-java "0.3"
+(defproject selmer-java "0.4"
   :min-lein-version  "2.0.0"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
