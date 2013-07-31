@@ -15,7 +15,7 @@ Install with Maven
 
 <groupId>selmer-java</groupId>
 		<artifactId>selmer-java</artifactId>
-		<version>0.2</version>
+		<version>0.5</version>
 </dependency>
 ```
 
