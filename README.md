@@ -44,7 +44,6 @@ public class Main {
 
 	static class MyBlockTag implements BlockTag<String,String,Map<String,String>> {
 
-		@Override
 		public String render(List<String> args,
 				Map<String, Map<String, String>> context,
 				Map<String, Map<String, String>> content) {
