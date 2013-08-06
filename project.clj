@@ -5,7 +5,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [selmer "0.2.4"]]
+                 [selmer "0.3.6"]]
   :source-paths      ["src/clj"]
   :java-source-paths ["src/java"]
   :aot  [selmer-java.core])
