@@ -1,6 +1,6 @@
 (ns selmer-java.core
   (:require [selmer.parser :as parser]
-            [selmer.tags :refer [tag-handler]]
+            [selmer.tags :refer [expr-tags tag-handler]]
             [selmer.filters :as filters]
             selmer.node
             [clojure.walk :refer [prewalk]])
@@ -71,7 +71,7 @@
 
 (defn -addTag [^String tagName ^selmer.extensions.Tag t]
   (let [open-tag (keyword tagName)]
-    (swap! parser/expr-tags
+    (swap! expr-tags
       assoc open-tag
            (tag-handler #(.render t (javaize %1) (javaize %2)) open-tag))
     nil))
@@ -87,7 +87,7 @@
 (defn -addBlockTag [^String openTag ^String closeTag ^selmer.extensions.BlockTag t]
   (let [open-tag (keyword openTag)
         close-tag (keyword closeTag)]
-    (swap! parser/expr-tags
+    (swap! expr-tags
            assoc open-tag
            (tag-handler (render-block t) open-tag close-tag))
     nil))
