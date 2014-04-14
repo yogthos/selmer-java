@@ -4,8 +4,8 @@
   :url "https://github.com/yogthos/selmer-java"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.5.1"]
-                 [selmer "0.6.1"]]
+  :dependencies [[org.clojure/clojure "1.6.0"]
+                 [selmer "0.6.5"]]
   :source-paths      ["src/clj"]
   :java-source-paths ["src/java"]
   :aot  [selmer-java.core])
